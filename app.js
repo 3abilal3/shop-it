@@ -7,7 +7,8 @@ var indexRouter = require("./routes/index");
 var apiRouter = require("./routes/api");
 var apiResponse = require("./helpers/apiResponse");
 var cors = require("cors");
-
+var ApiRoute=require('./routes/api')
+var nodemon = require('nodemon')
 // DB connection
 var MONGODB_URL = process.env.MONGODB_URL;
 var mongoose = require("mongoose");
@@ -23,7 +24,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 		console.error("App starting error:", err.message);
 		process.exit(1);
 	});
-var db = mongoose.connection;
+// var db = mongoose.connection;
 
 var app = express();
 
@@ -40,8 +41,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 //Route Prefixes
-app.use("/", indexRouter);
-app.use("/api/", apiRouter);
+// app.use("/", indexRouter);
+// app.use("/api/", apiRouter);
+app.use('/api/v1',ApiRoute)
 
 // throw 404 if URL not found
 app.all("*", function(req, res) {
