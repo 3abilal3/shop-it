@@ -171,3 +171,4 @@ Every project needs improvements, Feel free to report any bugs or improvements. 
 ## License
 
 This project is open-sourced software licensed under the MIT License. See the LICENSE file for more information.
+# shop-it
