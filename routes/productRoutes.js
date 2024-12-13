@@ -9,7 +9,7 @@ router.post("/", function(req, res) {
 });
 
 router.post("/admin/ProductListing",productControllers.createProduct)
-router.get("/AllProducts",productControllers.getAllProducts)
+router.get("/",productControllers.getAllProducts)
 router.get("/:id",productControllers.getProduct)
 router.put("/:id",productControllers.updateProduct)
 router.delete("/:id",productControllers.deleteProduct)

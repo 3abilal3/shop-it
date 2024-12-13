@@ -1,6 +1,15 @@
 const { body, validationResult } = require("express-validator");
 const apiResponse = require("../helpers/apiResponse");
 const Product = require("../models/product");
+const APIFilters = require("../utils/apiFilters");
+
+// Helper function to include stack trace in development
+function includeStack(error, resData) {
+  if (process.env.NODE_ENV === "development") {
+    resData.stack = error.stack;
+  }
+  return resData;
+}
 
 exports.createProduct = [
   body("name").isString().withMessage("Product name must be a string."),
@@ -27,7 +36,7 @@ exports.createProduct = [
     } catch (err) {
       next(err);
       console.error("Error while creating product:", err.message);
-      // return apiResponse.ErrorResponse(res, "An error occurred while creating the product.");
+      return apiResponse.ErrorResponse(res, "An error occurred while creating the product.");
     }
   },
 ];
@@ -36,16 +45,22 @@ exports.createProduct = [
 exports.getAllProducts = [
   async (req, res,next) => {
     try {
-      const products = await Product.find();
-      if (!products.length) {
-        return apiResponse.notFoundResponse(res, "No products found.");
+      const apiFilters=new APIFilters(Product.find(),req.query).search()
+      const products = await apiFilters.query;
+      const count=products.length;
+      if (!count) {
+        const error = new Error("No product found with this keyword.");
+        return apiResponse.notFoundResponse(res, error.message, error);
+      }
+      let data={
+        data:products,
+        count:count
       }
       return apiResponse.successResponseWithData(
         res,
         "Products retrieved successfully.",
-        products
-      );
-    } catch (err) {
+        data
+    )} catch (err) {
       next(err);
       console.error("Error while fetching products:", err.message);
       // return apiResponse.ErrorResponse(res, "An error occurred while fetching products.");
@@ -59,7 +74,8 @@ exports.getProduct = [
     try {
       const product = await Product.findById(req.params.id);
       if (!product) {
-        return apiResponse.notFoundResponse(res, "No product found with this ID.");
+        const error = new Error("No product found with this ID.");
+        return apiResponse.notFoundResponse(res, error.message, error);
       }
       return apiResponse.successResponseWithData(
         res,
