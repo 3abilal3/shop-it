@@ -12,6 +12,7 @@ var nodemon = require('nodemon')
 // DB connection
 var MONGODB_URL = process.env.MONGODB_URL;
 var mongoose = require("mongoose");
+const errorMiddleware = require("./middlewares/errorMiddleware");
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
 	//don't show the log when it is test
 	if(process.env.NODE_ENV !== "test") {
@@ -55,5 +56,5 @@ app.use((err, req, res) => {
 		return apiResponse.unauthorizedResponse(res, err.message);
 	}
 });
-
+app.use(errorMiddleware);
 module.exports = app;

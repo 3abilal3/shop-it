@@ -8,9 +8,9 @@ router.post("/", function(req, res) {
 	res.render("index", { title: "Express" });
 });
 
-router.post("/admin/ProductListing",productControllers.ProductListing)
-router.get("/AllProducts",productControllers.AllProducts)
+router.post("/admin/ProductListing",productControllers.createProduct)
+router.get("/AllProducts",productControllers.getAllProducts)
 router.get("/:id",productControllers.getProduct)
 router.put("/:id",productControllers.updateProduct)
-router.delete("/:id",productControllers.DeleteProduct)
+router.delete("/:id",productControllers.deleteProduct)
 module.exports = router;
