@@ -48,7 +48,7 @@ exports.getAllProducts = [
       const apiFilters=new APIFilters(Product.find(),req.query).search()
       const products = await apiFilters.query;
       const count=products.length;
-      if (!count) {
+      if(!count) {
         const error = new Error("No product found with this keyword.");
         return apiResponse.notFoundResponse(res, error.message, error);
       }
