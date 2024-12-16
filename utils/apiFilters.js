@@ -1,3 +1,5 @@
+const { successResponseWithData } = require("../helpers/apiResponse");
+
 class APIFilters{
     constructor(query,queryStr){
         this.query = query;
@@ -12,6 +14,14 @@ class APIFilters{
             }
         }:{};
         this.query=this.query.find({...keyword})
+        return this
+    }
+
+    pagination(resPerPage){
+        const currentPage = Number(this.queryStr.resPerPage) || 1
+        const skip=resPerPage*(currentPage-1)
+
+        this.query = this.query.limit(resPerPage).skip(skip)
         return this
     }
 }
