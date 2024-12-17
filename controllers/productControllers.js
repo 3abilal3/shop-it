@@ -45,7 +45,9 @@ exports.createProduct = [
 exports.getAllProducts = [
   async (req, res,next) => {
     try {
-      const apiFilters=new APIFilters(Product.find(),req.query).search()
+      const resPerPage = 4;
+      const apiFilters=new APIFilters(Product.find(),req.query).search().filters();
+
       const products = await apiFilters.query;
       const count=products.length;
       if(!count) {
@@ -53,8 +55,10 @@ exports.getAllProducts = [
         return apiResponse.notFoundResponse(res, error.message, error);
       }
       let data={
+        resPerPage:resPerPage,
+        count:count,
         data:products,
-        count:count
+        
       }
       return apiResponse.successResponseWithData(
         res,
