@@ -45,18 +45,24 @@ exports.createProduct = [
 exports.getAllProducts = [
   async (req, res,next) => {
     try {
-      const resPerPage = 4;
-      const apiFilters=new APIFilters(Product.find(),req.query).search().filters();
+      let resPerPage = 4;
+      let apiFilters=new APIFilters(Product.find(),req.query).search().filters(); 
 
-      const products = await apiFilters.query;
-      const count=products.length;
+      let products = await apiFilters.query;
+      let count=products.length;
       if(!count) {
-        const error = new Error("No product found with this keyword.");
+        let error = new Error("No product found .");
         return apiResponse.notFoundResponse(res, error.message, error);
       }
+
+      let totalPages = Math.ceil(count / resPerPage);  // Calculate the total number of pages
+      let currentPage = Number(req.query.page) || 1;
+
       let data={
         resPerPage:resPerPage,
         count:count,
+        totalPages: totalPages,  
+        currentPage: currentPage,
         data:products,
         
       }
