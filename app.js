@@ -52,7 +52,7 @@ app.all("*", function(req, res) {
 });
 
 app.use((err, req, res) => {
-	if(err.name   ==   "UnauthorizedError"){
+	if(err.name  ==  "Unauthorized Error"){
 		return apiResponse.unauthorizedResponse(res,  err.message);
 	}
 });
